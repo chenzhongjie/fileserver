@@ -3,6 +3,7 @@ package handler
 import (
 	"crypto/md5"
 	"fileserver/frame"
+	. "fileserver/log"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"io"
@@ -37,7 +38,7 @@ func download(ctx iris.Context) {
 		ctx.Writef("%s is not exist.", ctx.Params().Get("filename"))
 	}
 	if err := ctx.SendFile(filename, ctx.Params().Get("filename")); err != nil {
-		fmt.Printf("failed to send file %s. %s\n", ctx.Params().Get("filename"), err)
+		Log.Error("failed to send file %s. %s", ctx.Params().Get("filename"), err)
 	}
 }
 

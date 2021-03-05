@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fileserver/frame"
-	"fmt"
+	. "fileserver/log"
 	"github.com/kataras/iris/v12"
 	"io"
 	"mime/multipart"
@@ -34,9 +34,9 @@ func rootPost(ctx iris.Context) {
 			_, err = saveUploadedFile(file, "files")
 			if err != nil {
 				failures++
-				ctx.Writef("failed to upload: %s\n", file.Filename)
+				ctx.Writef("failed to upload: %s", file.Filename)
 			}
-			fmt.Printf("%s has been saved.\n", file.Filename)
+			Log.Info("%s has been saved.", file.Filename)
 		}
 	}
 	ctx.Writef("%d files uploaded. %d failures", totals-failures, failures)

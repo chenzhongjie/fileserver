@@ -4,6 +4,7 @@ import (
 	"context"
 	"fileserver/version"
 	"fmt"
+	. "fileserver/log"
 	"github.com/kataras/iris/v12"
 	"time"
 )
@@ -59,7 +60,7 @@ func Run(port string) {
 		}
 	}
 
-	fmt.Println("run iris...")
+	Log.Info("run iris...")
 	_ = app.Listen(":" + port, iris.WithoutInterruptHandler)
 }
 
