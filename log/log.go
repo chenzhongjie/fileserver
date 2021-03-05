@@ -19,6 +19,4 @@ func init() {
 	flog := fileLogger.NewDefaultLogger(logPath, version.NAME+".log", true)
 	flog.SetLogLevel(fileLogger.Debug)
 	Log = flog
-
-	flog.SetLogConsole(true)
 }
