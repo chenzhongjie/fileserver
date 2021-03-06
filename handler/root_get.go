@@ -13,14 +13,14 @@ import (
 	"time"
 )
 
-var LocalDir = "files"
+const LocalDir = "files"
 
 func init() {
-	frame.RegisterHandler("Get", "/", root)
-	frame.RegisterHandler("Get", "/{filename:string}", download)
+	//frame.RegisterHandler("Get", "/", page)
+	frame.RegisterHandler("Get", "/{fileName:string}", download)
 }
 
-func root(ctx iris.Context) {
+func page(ctx iris.Context) {
 	//创建一个令牌（可选）。
 	now := time.Now().Unix()
 	h := md5.New()
@@ -29,25 +29,25 @@ func root(ctx iris.Context) {
 	//使用令牌渲染表单以供您使用。
 	//ctx.ViewData(""，token)
 	//或者在`View`方法中添加第二个参数。
-
 	//令牌将作为{{.}}传递到模板中。
-
 	_ = ctx.View("upload_form.html", token)
 }
 
 func download(ctx iris.Context) {
-	filePath := filepath.Join(LocalDir, ctx.Params().Get("filename"))
+	fileName := ctx.Params().Get("fileName")
+	Log.Debug("to find download file %s", fileName)
+	filePath := filepath.Join(LocalDir, fileName)
 	if !isExist(filePath) {
-		Log.Info("%s is not exist.", ctx.Params().Get("filename"))
-		ctx.Writef("%s is not exist.", ctx.Params().Get("filename"))
+		Log.Info("%s is not exist.", fileName)
+		ctx.Writef("%s is not exist.", fileName)
 		return
 	}
-	err := ctx.SendFile(filePath, ctx.Params().Get("filename"))
+	err := ctx.SendFile(filePath, fileName)
 	if err != nil {
-		Log.Error("failed to send file %s. %s", ctx.Params().Get("filename"), err)
+		Log.Error("failed to send file %s. %s", fileName, err)
 		return
 	}
-	Log.Info("%s was downloaded.", ctx.Params().Get("filename"))
+	Log.Info("%s was downloaded.", fileName)
 }
 
 func isExist(path string) bool {
