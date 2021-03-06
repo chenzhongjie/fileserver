@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/ajg/form v1.5.1 // indirect
-	github.com/chenzhongjie/fileLogger v0.0.0-20210305094204-552b1d348792
+	github.com/chenzhongjie/fileLogger v0.0.0-20210306055523-3e9538da432f
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/kataras/iris/v12 v12.1.8

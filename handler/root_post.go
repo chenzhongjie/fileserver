@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fileserver/frame"
 	. "fileserver/log"
 	"github.com/kataras/iris/v12"
@@ -30,13 +31,16 @@ func rootPost(ctx iris.Context) {
 	failures := 0
 	for _, files := range form.File {
 		totals += len(files)
-		for _, file := range files {
-			_, err = saveUploadedFile(file, "files")
+		for _, fileHeader := range files {
+			_, err = saveUploadedFile(fileHeader, LocalDir)
 			if err != nil {
 				failures++
-				ctx.Writef("failed to upload: %s", file.Filename)
+				Log.Info("failed to save %s: %s", fileHeader.Filename, err)
+				ctx.Writef("failed to upload %s: %s\n", fileHeader.Filename, err)
+				continue
 			}
-			Log.Info("%s has been saved.", file.Filename)
+			Log.Info("%s has been saved.", fileHeader.Filename)
+			ctx.Writef("%s has been uploaded.\n", fileHeader.Filename)
 		}
 	}
 	ctx.Writef("%d files uploaded. %d failures", totals-failures, failures)
@@ -49,8 +53,11 @@ func saveUploadedFile(fh *multipart.FileHeader, destDirectory string) (int64, er
 	}
 	defer src.Close()
 
-	out, err := os.OpenFile(filepath.Join(destDirectory, fh.Filename),
-		os.O_WRONLY|os.O_CREATE, os.FileMode(0666))
+	var filePath = filepath.Join(destDirectory, fh.Filename)
+	if isExist(filePath) {
+		return 0, errors.New(fh.Filename + " is existing.")
+	}
+	out, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, os.FileMode(0666))
 	if err != nil {
 		return 0, err
 	}

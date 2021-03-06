@@ -2,9 +2,8 @@ package frame
 
 import (
 	"context"
-	"fileserver/version"
-	"fmt"
 	. "fileserver/log"
+	"fileserver/version"
 	"github.com/kataras/iris/v12"
 	"time"
 )
@@ -39,7 +38,7 @@ func Run(port string) {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 		CloseAllWork()
-		fmt.Printf("%s %s terminated\n", version.NAME, version.VERSION)
+		Log.Info("%s %s terminated.", version.NAME, version.VERSION)
 		_ = app.Shutdown(ctx)
 	})
 
@@ -60,7 +59,7 @@ func Run(port string) {
 		}
 	}
 
-	Log.Info("run iris...")
+	Log.Info("iris is running on %s port ...", port)
 	_ = app.Listen(":" + port, iris.WithoutInterruptHandler)
 }
 

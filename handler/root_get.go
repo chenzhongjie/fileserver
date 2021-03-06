@@ -8,9 +8,12 @@ import (
 	"github.com/kataras/iris/v12"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 )
+
+var LocalDir = "files"
 
 func init() {
 	frame.RegisterHandler("Get", "/", root)
@@ -33,13 +36,18 @@ func root(ctx iris.Context) {
 }
 
 func download(ctx iris.Context) {
-	filename := "files/" + ctx.Params().Get("filename")
-	if !isExist(filename) {
+	filePath := filepath.Join(LocalDir, ctx.Params().Get("filename"))
+	if !isExist(filePath) {
+		Log.Info("%s is not exist.", ctx.Params().Get("filename"))
 		ctx.Writef("%s is not exist.", ctx.Params().Get("filename"))
+		return
 	}
-	if err := ctx.SendFile(filename, ctx.Params().Get("filename")); err != nil {
+	err := ctx.SendFile(filePath, ctx.Params().Get("filename"))
+	if err != nil {
 		Log.Error("failed to send file %s. %s", ctx.Params().Get("filename"), err)
+		return
 	}
+	Log.Info("%s was downloaded.", ctx.Params().Get("filename"))
 }
 
 func isExist(path string) bool {
