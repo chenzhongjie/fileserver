@@ -43,6 +43,7 @@ func upload(ctx iris.Context) {
 			ctx.Writef("%s has been uploaded.\n", fileHeader.Filename)
 		}
 	}
+	Log.Info("%s %d files uploaded. %d failures", ctx.RemoteAddr(), totals-failures, failures)
 	ctx.Writef("%d files uploaded. %d failures", totals-failures, failures)
 }
 
