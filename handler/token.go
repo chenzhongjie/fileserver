@@ -6,12 +6,15 @@ import (
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
 	"math/rand"
+	"os"
 	"path/filepath"
 )
 
+const LocalDir = "files"
 var Token string
 
 func init() {
+	initLocalDir()
 	Token = newToken(10)
 	Log.Info("new token: %s", Token)
 	filePath := filepath.Join(LocalDir, ".token")
@@ -51,4 +54,21 @@ func randSeq(n uint) string {
 		b[i] = letters[rand.Int63() % int64(len(letters))]
 	}
 	return string(b)
+}
+
+func initLocalDir() {
+	if isExist(LocalDir) {
+		return
+	}
+	err := os.Mkdir(LocalDir, 0777)
+	if err != nil {
+		Log.Error("failed to make dir %s", LocalDir)
+		panic(err)
+	}
+	Log.Debug("make dir %s", LocalDir)
+}
+
+func isExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
 }

@@ -7,13 +7,10 @@ import (
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"io"
-	"os"
 	"path/filepath"
 	"strconv"
 	"time"
 )
-
-const LocalDir = "files"
 
 func init() {
 	//frame.RegisterHandler("Get", "/", page)
@@ -48,9 +45,4 @@ func download(ctx iris.Context) {
 		return
 	}
 	Log.Info("%s was downloaded.", fileName)
-}
-
-func isExist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil || os.IsExist(err)
 }
