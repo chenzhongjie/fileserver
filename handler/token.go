@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fileserver/frame"
 	. "fileserver/log"
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
@@ -10,32 +9,33 @@ import (
 	"path/filepath"
 )
 
-const LocalDir = "files"
-var Token string
+const localFilesDir = "files"
+const tokenFileName = ".token"
+
+var pageToken string
+var apiToken string
 
 func init() {
 	initLocalDir()
-	Token = newToken(10)
-	Log.Info("new token: %s", Token)
-	filePath := filepath.Join(LocalDir, ".token")
-	err := saveToken(Token, filePath)
+
+	pageToken = newToken(10)
+	Log.Debug("new page token: %s", pageToken)
+
+	apiToken = newToken(10)
+	Log.Info("new api token: %s", apiToken)
+	filePath := filepath.Join(localFilesDir, tokenFileName)
+	err := saveToken(apiToken, filePath)
 	if err != nil {
-		Log.Error("failed to save token: %s", err)
+		Log.Error("failed to save apiToken: %s", err)
 		panic(err)
 	}
-	Log.Info("saved token in %s", filePath)
-	frame.RegisterMiddleware(checkToken)
+	Log.Info("saved api token in %s", filePath)
 }
 
-func checkToken(ctx iris.Context) {
+func isValidToken(ctx iris.Context, token string) (bool, string) {
 	tokenParam := ctx.URLParam("token")
-	Log.Debug("token: %s", tokenParam)
-	if tokenParam != Token {
-		Log.Warn("%s %s token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
-		ctx.Writef("Authentication failed.")
-		return
-	}
-	ctx.Next()
+	Log.Info("token param: %s", tokenParam)
+	return tokenParam == token, tokenParam
 }
 
 func saveToken(token string, filePath string) error {
@@ -43,12 +43,7 @@ func saveToken(token string, filePath string) error {
 }
 
 const letters = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-func newToken(len uint) string {
-	return randSeq(len)
-}
-
-func randSeq(n uint) string {
+func newToken(n uint) string {
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letters[rand.Int63() % int64(len(letters))]
@@ -57,15 +52,15 @@ func randSeq(n uint) string {
 }
 
 func initLocalDir() {
-	if isExist(LocalDir) {
+	if isExist(localFilesDir) {
 		return
 	}
-	err := os.Mkdir(LocalDir, 0777)
+	err := os.Mkdir(localFilesDir, 0777)
 	if err != nil {
-		Log.Error("failed to make dir %s", LocalDir)
+		Log.Error("failed to make dir %s", localFilesDir)
 		panic(err)
 	}
-	Log.Debug("make dir %s", LocalDir)
+	Log.Debug("make dir: %s", localFilesDir)
 }
 
 func isExist(path string) bool {

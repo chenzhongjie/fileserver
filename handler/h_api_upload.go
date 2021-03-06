@@ -12,10 +12,10 @@ import (
 )
 
 func init() {
-	frame.RegisterHandler("Post", "/", rootPost)
+	frame.RegisterHandler("Post", "/", checkApiToken, upload)
 }
 
-func rootPost(ctx iris.Context) {
+func upload(ctx iris.Context) {
 	// Get the max post value size in memory passed via iris.WithPostMaxMemory.
 	// Too big file will be saved to tmp disk file and then to be copied to destDirectory.
 	maxSize := ctx.Application().ConfigurationReadOnly().GetPostMaxMemory()
@@ -32,7 +32,7 @@ func rootPost(ctx iris.Context) {
 	for _, files := range form.File {
 		totals += len(files)
 		for _, fileHeader := range files {
-			_, err = saveUploadedFile(fileHeader, LocalDir)
+			_, err = saveUploadedFile(fileHeader, localFilesDir)
 			if err != nil {
 				failures++
 				Log.Info("failed to save %s: %s", fileHeader.Filename, err)

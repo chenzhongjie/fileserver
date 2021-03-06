@@ -1,10 +1,8 @@
 package handler
 
-import (
-	"testing"
-)
+import "testing"
 
 func Test_newToken(t *testing.T) {
 	var token = newToken(10)
-	t.Logf("new token: %s", token)
+	t.Logf("new apiToken: %s", token)
 }
