@@ -31,8 +31,9 @@ func RegisterHandler(method, uri string, handler ...iris.Handler) {
 
 
 func Run(port string) {
-	app := iris.New()
+	Log.Info("start %s %s ...", version.NAME, version.VERSION)
 
+	app := iris.New()
 	iris.RegisterOnInterrupt(func() {
 		timeout := 5 * time.Second
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -59,7 +60,7 @@ func Run(port string) {
 		}
 	}
 
-	Log.Info("iris is running on %s port ...", port)
+	Log.Info("%s is running on %s port ...", version.NAME, port)
 	_ = app.Listen(":" + port, iris.WithoutInterruptHandler)
 }
 
