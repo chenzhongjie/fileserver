@@ -29,12 +29,12 @@ func init() {
 		Log.Error("failed to save apiToken: %s", err)
 		panic(err)
 	}
-	Log.Info("saved api token in %s", filePath)
+	Log.Debug("saved api token in %s", filePath)
 }
 
 func isValidToken(ctx iris.Context, token string) (bool, string) {
 	tokenParam := ctx.URLParam("token")
-	Log.Info("token param: %s", tokenParam)
+	Log.Debug("token param: %s", tokenParam)
 	return tokenParam == token, tokenParam
 }
 

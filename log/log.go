@@ -17,6 +17,6 @@ type Logger interface {
 func init() {
 	logPath := "logs"
 	flog := fileLogger.NewDefaultLogger(logPath, version.NAME+".log", true)
-	flog.SetLogLevel(fileLogger.Debug)
+	flog.SetLogLevel(fileLogger.INFO)
 	Log = flog
 }

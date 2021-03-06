@@ -16,6 +16,6 @@ func checkPageToken(ctx iris.Context) {
 		ctx.Next()
 		return
 	}
-	Log.Warn("%s %s page token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
+	Log.Warn("[%s] %s page token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
 	ctx.Writef("Authentication failed.")
 }
