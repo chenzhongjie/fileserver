@@ -13,6 +13,6 @@ func main() {
 	maxFileSize := flag.Int64("maxsize", 2, "Max uploaded file size. Unit: G")
 	flag.Parse()
 
-	frame.RegisterMiddleware(iris.LimitRequestBodySize((*maxFileSize + 1)<<30))
+	frame.RegisterMiddleware(iris.LimitRequestBodySize(*maxFileSize<<30 + 1<<20))
 	frame.Run(*port)
 }
