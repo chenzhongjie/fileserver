@@ -14,7 +14,7 @@ open ` http://ip:8080` in any browser.
 
 **download addr**
 
-`http://ip:8080/abc?token=ze4LApGm5T`
+`wget --header="token:ze4LApGm5T" http://ip:8080/abc`
 
 **other**
 
