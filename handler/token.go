@@ -30,8 +30,7 @@ func init() {
 }
 
 func isValidToken(ctx iris.Context, token string) (bool, string) {
-	tokenParam := ctx.URLParam("token")
-	Log.Debug("token param: %s", tokenParam)
+	tokenParam := ctx.Values().Get("token").(string)
 	return tokenParam == token, tokenParam
 }
 

@@ -18,6 +18,7 @@ func checkApiToken(ctx iris.Context) {
 		return
 	}
 	Log.Warn("[%s] %s api token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
+	ctx.StatusCode(iris.StatusUnauthorized)
 	ctx.Writef("Authentication failed.")
 }
 
