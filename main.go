@@ -3,7 +3,6 @@ package main
 import (
 	"fileserver/frame"
 	"fileserver/handler"
-	_ "fileserver/html"
 	"fileserver/version"
 	"flag"
 	"fmt"

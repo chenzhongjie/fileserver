@@ -10,7 +10,13 @@ import (
 var pageUploadIp = "127.0.0.1"
 
 func init() {
+	frame.RegisterFunc(htmlFunc)
 	frame.RegisterHandler("Get", "/", pageGet)
+}
+
+func htmlFunc(app *iris.Application) {
+	//app.RegisterView(iris.HTML("html", ".html"))
+	app.RegisterView(iris.HTML("html", ".html").Binary(Asset, AssetNames))
 }
 
 func pageGet(ctx iris.Context) {
