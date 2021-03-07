@@ -1,4 +1,10 @@
 package version
 
-var NAME string = "fileserver"
-var VERSION string = "1.0.0"
+const (
+	NAME string = "fileserver"
+	VERSION string = "1.0.0"
+)
+
+func FullVersion() string {
+	return NAME + " v" + VERSION
+}

@@ -17,19 +17,16 @@ var apiToken string
 
 func init() {
 	initLocalDir()
-
-	pageToken = newToken(10)
-	Log.Debug("new page token: %s", pageToken)
-
 	apiToken = newToken(10)
-	Log.Info("new api token: %s", apiToken)
 	filePath := filepath.Join(localFilesDir, tokenFileName)
 	err := saveToken(apiToken, filePath)
 	if err != nil {
 		Log.Error("failed to save apiToken: %s", err)
 		panic(err)
 	}
-	Log.Debug("saved api token in %s", filePath)
+	Log.Info("saved api token %s in %s", apiToken, filePath)
+	pageToken = newToken(10)
+	Log.Debug("new page token: %s", pageToken)
 }
 
 func isValidToken(ctx iris.Context, token string) (bool, string) {
