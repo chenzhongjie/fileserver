@@ -4,8 +4,11 @@ import (
 	"fileserver/frame"
 	. "fileserver/log"
 	"github.com/kataras/iris/v12"
+	"os"
 	"path/filepath"
 )
+
+var localFilesDir string
 
 func init() {
 	frame.RegisterHandler("Get", "/{fileName:string}", checkApiToken, download)
@@ -37,4 +40,13 @@ func download(ctx iris.Context) {
 		return
 	}
 	Log.Info("%s was downloaded.", fileName)
+}
+
+func isExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
+}
+
+func SetLocalFilesDir(path string) {
+	localFilesDir = path
 }
