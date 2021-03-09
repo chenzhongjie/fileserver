@@ -41,6 +41,28 @@ func getTokenParam(ctx iris.Context) {
 	ctx.Next()
 }
 
+func checkPageToken(ctx iris.Context) {
+	valid, tokenParam := isValidToken(ctx, pageToken)
+	if valid {
+		ctx.Next()
+		return
+	}
+	Log.Warn("[%s] %s page token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
+	ctx.StatusCode(iris.StatusUnauthorized)
+	ctx.Writef("Authentication failed.")
+}
+
+func checkApiToken(ctx iris.Context) {
+	valid, tokenParam := isValidToken(ctx, apiToken)
+	if valid {
+		ctx.Next()
+		return
+	}
+	Log.Warn("[%s] %s api token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
+	ctx.StatusCode(iris.StatusUnauthorized)
+	ctx.Writef("Authentication failed.")
+}
+
 func isValidToken(ctx iris.Context, token string) (bool, string) {
 	if !isAuth {
 		return true, ""

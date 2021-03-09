@@ -14,17 +14,6 @@ func init() {
 	frame.RegisterHandler("Get", "/{fileName:string}", checkApiToken, download)
 }
 
-func checkApiToken(ctx iris.Context) {
-	valid, tokenParam := isValidToken(ctx, apiToken)
-	if valid {
-		ctx.Next()
-		return
-	}
-	Log.Warn("[%s] %s api token %s is wrong.", ctx.RemoteAddr(), ctx.FullRequestURI(), tokenParam)
-	ctx.StatusCode(iris.StatusUnauthorized)
-	ctx.Writef("Authentication failed.")
-}
-
 func download(ctx iris.Context) {
 	fileName := ctx.Params().Get("fileName")
 	Log.Debug("to find download file %s", fileName)
