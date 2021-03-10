@@ -4,6 +4,7 @@ import (
 	"fileserver/frame"
 	"fileserver/handler"
 	. "fileserver/log"
+	"fileserver/utils"
 	"fileserver/version"
 	"flag"
 	"fmt"
@@ -29,13 +30,13 @@ func main() {
 	if !*fNoAuth {
 		handler.InitToken()
 	}
-	handler.SetPageRemoteUpload(*fIsPageRemote)
+	handler.SetPageUploadIp(*fIsPageRemote)
 	frame.RegisterMiddleware(iris.LimitRequestBodySize(*fMaxFileSize<<30 + 1<<20))
 	frame.Run(*fPort)
 }
 
 func initLocalDir(localFilesDir string) {
-	if isExist(localFilesDir) {
+	if utils.IsFileExist(localFilesDir) {
 		return
 	}
 	err := os.Mkdir(localFilesDir, 0777)
@@ -44,9 +45,4 @@ func initLocalDir(localFilesDir string) {
 		panic(err)
 	}
 	Log.Debug("make dir: %s", localFilesDir)
-}
-
-func isExist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil || os.IsExist(err)
 }

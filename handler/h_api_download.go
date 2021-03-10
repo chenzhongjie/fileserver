@@ -3,8 +3,8 @@ package handler
 import (
 	"fileserver/frame"
 	. "fileserver/log"
+	"fileserver/utils"
 	"github.com/kataras/iris/v12"
-	"os"
 	"path/filepath"
 )
 
@@ -18,7 +18,7 @@ func download(ctx iris.Context) {
 	fileName := ctx.Params().Get("fileName")
 	Log.Debug("to find download file %s", fileName)
 	filePath := filepath.Join(localFilesDir, fileName)
-	if !isExist(filePath) {
+	if !utils.IsFileExist(filePath) {
 		Log.Info("%s is not exist.", fileName)
 		ctx.Writef("%s is not exist.", fileName)
 		return
@@ -29,11 +29,6 @@ func download(ctx iris.Context) {
 		return
 	}
 	Log.Info("%s was downloaded.", fileName)
-}
-
-func isExist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil || os.IsExist(err)
 }
 
 func SetLocalFilesDir(path string) {

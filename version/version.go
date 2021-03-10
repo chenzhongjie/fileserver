@@ -2,7 +2,7 @@ package version
 
 const (
 	NAME string = "fileserver"
-	VERSION string = "1.1.0"
+	VERSION string = "1.2.0"
 )
 
 func FullVersion() string {

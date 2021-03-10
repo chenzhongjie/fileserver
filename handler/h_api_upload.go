@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fileserver/frame"
 	. "fileserver/log"
+	"fileserver/utils"
 	"github.com/kataras/iris/v12"
 	"io"
 	"mime/multipart"
@@ -55,7 +56,7 @@ func saveUploadedFile(fh *multipart.FileHeader, destDirectory string) (int64, er
 	defer src.Close()
 
 	var filePath = filepath.Join(destDirectory, fh.Filename)
-	if isExist(filePath) {
+	if utils.IsFileExist(filePath) {
 		return 0, errors.New(fh.Filename + " is existing.")
 	}
 	out, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, os.FileMode(0666))

@@ -3,13 +3,18 @@ package handler
 import (
 	"fileserver/frame"
 	. "fileserver/log"
+	"fileserver/utils"
 	"github.com/kataras/iris/v12"
-	"github.com/xjh22222228/ip"
 )
 
 var pageUploadIp = "127.0.0.1"
 
 func init() {
+	internalIp, err := utils.GetInternalIp()
+	if err == nil {
+		pageUploadIp = internalIp
+		Log.Debug("get internal ip: %s", pageUploadIp)
+	}
 	frame.RegisterFunc(htmlFunc)
 	frame.RegisterHandler("Get", "/", pageGet)
 }
@@ -26,18 +31,10 @@ func pageGet(ctx iris.Context) {
 	}
 }
 
-func SetPageRemoteUpload(pageRemote bool) {
+func SetPageUploadIp(pageRemote bool) {
 	if pageRemote {
-		pageUploadIp, _ = getPublicIp()
+		pageUploadIp, _ = utils.GetPublicIp()
 		Log.Debug("get public ip: %s", pageUploadIp)
 	}
 	Log.Info("page upload ip: %s", pageUploadIp)
-}
-
-func getPublicIp() (string, error) {
-	ipv4, err := ip.V4()
-	if err != nil {
-		return "", err
-	}
-	return ipv4, nil
 }
