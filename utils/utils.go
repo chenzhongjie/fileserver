@@ -10,7 +10,7 @@ import (
 )
 
 const letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-func RandomString(n uint) string {
+func RandString(n uint) string {
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letters[rand.Int63() % int64(len(letters))]
@@ -23,15 +23,24 @@ func IsFileExist(path string) bool {
 	return err == nil || os.IsExist(err)
 }
 
+var publicIp string
 func GetPublicIp() (string, error) {
+	if publicIp != "" {
+		return publicIp, nil
+	}
 	ipv4, err := ip.V4()
 	if err != nil {
 		return "", err
 	}
-	return ipv4, nil
+	publicIp = ipv4
+	return publicIp, nil
 }
 
+var internalIp string
 func GetInternalIp() (string, error) {
+	if internalIp != "" {
+		return internalIp, nil
+	}
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
 		return "", errors.New("internal IP fetch failed, detail:" + err.Error())
@@ -39,5 +48,6 @@ func GetInternalIp() (string, error) {
 	defer conn.Close()
 
 	addr := conn.LocalAddr().String()
-	return strings.Split(addr, ":")[0], nil
+	internalIp = strings.Split(addr, ":")[0]
+	return internalIp, nil
 }

@@ -16,7 +16,7 @@ var apiToken string
 var isAuth = false
 
 func InitToken() {
-	apiToken = utils.RandomString(10)
+	apiToken = utils.RandString(10)
 	filePath := filepath.Join(localFilesDir, tokenFileName)
 	err := saveToken(apiToken, filePath)
 	if err != nil {
@@ -24,7 +24,7 @@ func InitToken() {
 		panic(err)
 	}
 	Log.Info("saved api token %s in %s", apiToken, filePath)
-	pageToken = utils.RandomString(10)
+	pageToken = utils.RandString(10)
 	Log.Debug("new page token: %s", pageToken)
 
 	frame.RegisterMiddleware(getTokenParam)
